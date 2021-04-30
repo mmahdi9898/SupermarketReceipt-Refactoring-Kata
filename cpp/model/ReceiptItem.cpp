@@ -20,10 +20,10 @@ double ReceiptItem::getQuantity() const {
 }
 
 bool ReceiptItem::operator==(const ReceiptItem& rhs) const {
-    return product == rhs.product &&
-           price == rhs.price &&
-           totalPrice == rhs.totalPrice &&
-           quantity == rhs.quantity;
+    return product == rhs.getProduct() &&
+           price == rhs.getPrice() &&
+           totalPrice == rhs.getTotalPrice() &&
+           quantity == rhs.getQuantity();
 }
 
 bool ReceiptItem::operator!=(const ReceiptItem& rhs) const {
