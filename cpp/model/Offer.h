@@ -1,27 +1,26 @@
 #ifndef CPP_OFFER_H
 #define CPP_OFFER_H
 
-
+#include <vector>
 #include "Product.h"
 #include "SpecialOfferType.h"
 
 class Offer {
 public:
 	
-    Offer(const SpecialOfferType& offerType, const Product& product, double argument);
+    Offer(const SpecialOfferType& offerType, const std::vector<Product>& product, std::vector<double> argument);
 
     SpecialOfferType getOfferType() const;
 
-    Product getProduct() const;
+    std::vector<Product> getProducts() const;
 
-    double getArgument() const;
+    std::vector<double> getArguments() const;
 
 private:
     SpecialOfferType offerType;
-    Product product;
-    double argument;
+    std::vector<Product> products;
+    std::vector<double> arguments;
 
 };
-
 
 #endif //CPP_OFFER_H

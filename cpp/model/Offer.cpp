@@ -1,16 +1,16 @@
 #include "Offer.h"
 
-Offer::Offer(const SpecialOfferType& offerType, const Product& product, double argument)
-        : offerType(offerType), product(product), argument(argument) {}
+Offer::Offer(const SpecialOfferType& offerType, const std::vector<Product>& product, std::vector<double> argument)
+        : offerType(offerType), products(products), arguments(arguments) {}
 
 SpecialOfferType Offer::getOfferType() const {
         return offerType;
 }
 
-Product Offer::getProduct() const {
-        return product;
+std::vector<Product> Offer::getProducts() const {
+        return products;
 }
 
-double Offer::getArgument() const {
-        return argument;
+std::vector<double> Offer::getArguments() const {
+        return arguments;
 }

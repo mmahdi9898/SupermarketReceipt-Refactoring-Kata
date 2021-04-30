@@ -34,14 +34,41 @@ void ShoppingCart::handleOffers(Receipt& receipt, std::map<Product, Offer> offer
             Discount* discount = nullptr;
             int offerCount = 1;
 
+            if (offer.getOfferType() == SpecialOfferType::Bundles){ // product is included in bundle offer
+                bool isBundle = true; // flag to indentify bundles
+                std::vector<int> localCountOffer; // keep track of the local offer counts
+                for(const auto& p : offer.getProducts()){ // for every product in the bundle offer
+                    if(productQuantities.find(product) != productQuantities.end()){ // product found in quantities
+                        double limit = offers.getArguments()[offer.getProducts().find(product) - offer.getProducts().begin() + offers.getArguments().begin()]; // argument of the product
+                        if(productQuantities[product] >= limit){
+                            localCountOffer.push_back(int(productQuantities[product] / limit));
+                        }
+                        else{
+                            isBundle = false;
+                            break; // amount not reached the minimum limit
+                        }
+                    }
+                    else{
+                        isBundle = false;
+                        break; // element not found
+                    }
+                }
+                if(isBundle == true){ // a suitable bundle found
+                    int offerWhole = std::min_element(localCountOffer.begin(), localCountOffer.end()); // number of wholes in bundle
+                    double limit = offers.getArguments()[offer.getProducts().find(product) - offer.getProducts().begin() + offers.getArguments().begin()]; // argument of the product
+                    double percentage = offers.getArguments().back(); // get the discount percentage
+                    double discountAmount = quantity - (percentage*offerWhole*limit + quantityAsInt % (offerWhole*limit)); // difference
+                    discount = new Discount("Bundles", -1 * unitPrice *discountAmount, product); // create discount
+                }
+            }
             if (offer.getOfferType() == SpecialOfferType::ThreeForTwo) {
                 offerCount = 3;
             } else if (offer.getOfferType() == SpecialOfferType::TwoForAmount) {
                 offerCount = 2;
                 if (quantityAsInt >= 2) {
-                    double total = offer.getArgument() * (quantityAsInt / offerCount) + quantityAsInt % 2 * unitPrice;
+                    double total = offer.getArguments().front() * (quantityAsInt / offerCount) + quantityAsInt % 2 * unitPrice;
                     double discountN = unitPrice * quantity - total;
-                    discount = new Discount("2 for " + std::to_string(offer.getArgument()), -discountN, product);
+                    discount = new Discount("2 for " + std::to_string(offer.getArguments().front()), -discountN, product);
                 }
             } if (offer.getOfferType() == SpecialOfferType::FiveForAmount) {
                 offerCount = 5;
@@ -52,11 +79,11 @@ void ShoppingCart::handleOffers(Receipt& receipt, std::map<Product, Offer> offer
                 discount = new Discount("3 for 2", -discountAmount, product);
             }
             if (offer.getOfferType() == SpecialOfferType::TenPercentDiscount) {
-                discount = new Discount(std::to_string(offer.getArgument()) + "% off", -quantity * unitPrice * offer.getArgument() / 100.0, product);
+                discount = new Discount(std::to_string(offer.getArguments().front()) + "% off", -quantity * unitPrice * offer.getArguments().front() / 100.0, product);
             }
             if (offer.getOfferType() == SpecialOfferType::FiveForAmount && quantityAsInt >= 5) {
-                double discountTotal = unitPrice * quantity - (offer.getArgument() * offerWhole + quantityAsInt % 5 * unitPrice);
-                discount = new Discount(std::to_string(offerCount) + " for " + std::to_string(offer.getArgument()), -discountTotal, product);
+                double discountTotal = unitPrice * quantity - (offer.getArguments().front() * offerWhole + quantityAsInt % 5 * unitPrice);
+                discount = new Discount(std::to_string(offerCount) + " for " + std::to_string(offer.getArguments().front()), -discountTotal, product);
             }
             if (discount != nullptr)
                 receipt.addDiscount(*discount);

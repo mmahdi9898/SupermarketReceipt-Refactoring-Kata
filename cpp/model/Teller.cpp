@@ -2,8 +2,10 @@
 
 Teller::Teller(SupermarketCatalog *catalog) : catalog(catalog) {}
 
-void Teller::addSpecialOffer(SpecialOfferType offerType, const Product& product, double argument) {
-    offers[product] = Offer(offerType, product, argument);
+void Teller::addSpecialOffer(SpecialOfferType offerType, const std::vector<Product&> products, std::vector<double> arguments) {
+    for (const auto& product: products) {
+        offers[product] = Offer(offerType, products, arguments);
+    }
 }
 
 Receipt Teller::checksOutArticlesFrom(ShoppingCart theCart) {
