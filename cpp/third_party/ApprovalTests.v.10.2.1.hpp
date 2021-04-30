@@ -1888,7 +1888,7 @@ namespace ApprovalTests
 #ifdef APPROVALS_CATCH
 #define APPROVAL_TESTS_INCLUDE_CPPS
 
-#include <catch2/catch.hpp>
+#include "catch2/catch.hpp"
 
 //namespace ApprovalTests {
 struct Catch2ApprovalListener : Catch::TestEventListenerBase
