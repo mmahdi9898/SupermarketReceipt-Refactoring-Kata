@@ -7,7 +7,6 @@
 
 class Product {
 public:
-    Product() = default;
     
     Product(const std::string& name, const ProductUnit& unit);
 

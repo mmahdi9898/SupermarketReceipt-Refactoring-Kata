@@ -7,7 +7,7 @@
 
 class Offer {
 public:
-    Offer() = default;
+	
     Offer(const SpecialOfferType& offerType, const Product& product, double argument);
 
     SpecialOfferType getOfferType() const;
